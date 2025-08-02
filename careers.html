@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Careers - Cleanse</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;500;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <style>
+    :root {
+      --header-height: 80px;
+    }
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', Arial, Helvetica, sans-serif;
+      background-color: #fff;
+      color: #23272f;
+      overflow-x: hidden;
+      padding-top: var(--header-height);
+    }
+    body {
+      min-height: 100vh;
+      position: relative;
+      background-image:
+        linear-gradient(to right, #ececec 1px, transparent 1px),
+        linear-gradient(to bottom, #ececec 1px, transparent 1px);
+      background-size: 32px 32px;
+      animation: gridMove 12s linear infinite alternate;
+    }
+    @keyframes gridMove {
+      0% { background-position: 0 0, 0 0; }
+      100% { background-position: 32px 32px, 32px 32px; }
+    }
+    
+    /* Header Styles */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 10;
+      width: 100%;
+      background: #fff;
+      border-bottom: 1px solid #ececec;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      transition: box-shadow 0.3s;
+      animation: fadeInDown 1s;
+    }
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 2rem;
+      background: #fff;
+      z-index: 11;
+    }
+    header { height: var(--header-height); }
+    .logo {
+      font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #23272f;
+      letter-spacing: 1px;
+      transition: color 0.2s;
+      background: #fff;
+      z-index: 12;
+      position: relative;
+      animation: fadeInLeft 1.2s;
+      text-decoration: none;
+    }
+    @keyframes fadeInLeft {
+      from { opacity: 0; transform: translateX(-40px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 2.5rem;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+    }
+    /* Hamburger Menu */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+      padding: 0.5rem;
+      z-index: 1001;
+    }
+    .hamburger span {
+      width: 25px;
+      height: 3px;
+      background: #23272f;
+      margin: 3px 0;
+      transition: 0.3s;
+    }
+    .hamburger.active span:nth-child(1) {
+      transform: rotate(-45deg) translate(-5px, 6px);
+    }
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+    .hamburger.active span:nth-child(3) {
+      transform: rotate(45deg) translate(-5px, -6px);
+    }
+    /* Mobile Drawer */
+    .mobile-drawer {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 280px;
+      height: 100vh;
+      background: #fff;
+      box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+      transition: right 0.3s ease;
+      z-index: 1000;
+      padding: 2rem 1.5rem;
+    }
+    .mobile-drawer.active {
+      right: 0;
+    }
+    .mobile-drawer .close-btn {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #23272f;
+    }
+    .mobile-drawer .nav-links {
+      display: flex !important;
+      flex-direction: column;
+      gap: 1.5rem;
+      margin-top: 3rem;
+      margin-left: 0;
+    }
+    .mobile-drawer .nav-links a {
+      font-size: 1.1rem;
+      padding: 0.5rem 0;
+      color: #23272f;
+      text-decoration: none;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .mobile-drawer .nav-links a:hover {
+      color: #007aff;
+    }
+    .mobile-drawer .social-icons {
+      display: flex !important;
+      margin-top: 2rem;
+      gap: 1rem;
+      margin-left: 0;
+      justify-content: flex-start;
+    }
+    .mobile-drawer .header-ctas {
+      display: flex !important;
+      margin-top: 2rem;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      z-index: 999;
+    }
+    .overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    /* Fluid Images and Containers */
+    img, svg, video {
+      max-width: 100%;
+      height: auto;
+    }
+    .header-container,
+    .page-hero-content,
+    .careers-content,
+    .footer-container {
+      max-width: 100%;
+    }
+    .nav-links a {
+      font-family: 'Poppins', Arial, Helvetica, sans-serif;
+      font-weight: 600;
+      color: #23272f;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: color 0.2s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      display: block;
+      width: 0%;
+      height: 2px;
+      background: #007aff;
+      transition: width 0.3s;
+      position: absolute;
+      left: 0; bottom: -3px;
+    }
+    .nav-links a:hover, .nav-links a.active {
+      color: #007aff;
+    }
+    .nav-links a:hover::after, .nav-links a.active::after {
+      width: 100%;
+    }
+    .social-icons {
+      display: flex;
+      gap: 1.2rem;
+      margin-left: 2rem;
+    }
+    .social-icons a {
+      color: #23272f;
+      font-size: 1.2rem;
+      transition: color 0.2s, transform 0.2s, box-shadow 0.2s;
+      border-radius: 50%;
+      padding: 0.2em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .social-icons a:hover {
+      color: #fff;
+      background: #007aff;
+      transform: scale(1.15);
+      box-shadow: 0 2px 12px #007aff44;
+    }
+    .header-ctas {
+      display: flex;
+      gap: 1rem;
+      margin-left: 1.5rem;
+    }
+    .login-btn {
+      font-family: 'Poppins', Arial, Helvetica, sans-serif;
+      font-weight: 600;
+      color: #23272f;
+      text-decoration: none;
+      font-size: 0.95rem;
+      padding: 0.6rem 1.2rem;
+      border-radius: 6px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .login-btn:hover {
+      background: #f5faff;
+      color: #007aff;
+    }
+    .trial-btn {
+      font-family: 'Poppins', Arial, Helvetica, sans-serif;
+      font-weight: 600;
+      background: #007aff;
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.95rem;
+      padding: 0.6rem 1.2rem;
+      border-radius: 6px;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .trial-btn:hover {
+      background: #005bb5;
+      transform: translateY(-1px);
+    }
+    
+    /* Page Hero */
+    .page-hero {
+      background: linear-gradient(135deg, #f5faff 0%, #e9f1fb 100%);
+      padding: calc(3rem + var(--header-height)) 0 4rem 0;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="%23007aff" opacity="0.1"/><circle cx="80" cy="40" r="1" fill="%23007aff" opacity="0.1"/><circle cx="40" cy="80" r="1.5" fill="%23007aff" opacity="0.1"/></svg>');
+      animation: float 20s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
+    .page-hero-content {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      position: relative;
+      z-index: 2;
+    }
+    .page-hero-icon {
+      font-size: 4rem;
+      color: #007aff;
+      margin-bottom: 1.5rem;
+      animation: teamwork 3s ease-in-out infinite;
+    }
+    @keyframes teamwork {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      50% { transform: scale(1.1) rotate(5deg); }
+    }
+    .page-hero-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 3rem;
+      font-weight: 700;
+      color: #23272f;
+      margin-bottom: 1rem;
+      animation: fadeInUp 1s;
+    }
+    .page-hero-subtitle {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.3rem;
+      color: #4a4a4a;
+      margin-bottom: 2rem;
+      animation: fadeInUp 1s 0.2s both;
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Careers Content */
+    .careers-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+    }
+    
+    /* Culture Section */
+    .culture-section {
+      margin-bottom: 4rem;
+    }
+    .culture-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #23272f;
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    .culture-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+    .culture-card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 2.5rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      text-align: center;
+      transition: transform 0.3s, box-shadow 0.3s;
+      animation: fadeInUp 1s both;
+    }
+    .culture-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+    }
+    .culture-icon {
+      font-size: 3rem;
+      color: #007aff;
+      margin-bottom: 1.5rem;
+      animation: cultureIconAnim 2s ease-in-out infinite alternate;
+    }
+    @keyframes cultureIconAnim {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.1); }
+    }
+    .culture-card-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #23272f;
+      margin-bottom: 1rem;
+    }
+    .culture-card-desc {
+      font-family: 'Roboto', sans-serif;
+      color: #4a4a4a;
+      line-height: 1.6;
+    }
+    
+    /* Benefits Section */
+    .benefits-section {
+      background: #f8fbff;
+      padding: 4rem 2rem;
+      margin: 0 -2rem 4rem -2rem;
+      border-radius: 20px;
+    }
+    .benefits-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #23272f;
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+    .benefit-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: #fff;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+      transition: transform 0.3s;
+      animation: fadeInUp 1s both;
+    }
+    .benefit-item:hover {
+      transform: translateY(-3px);
+    }
+    .benefit-icon {
+      font-size: 2rem;
+      color: #007aff;
+      width: 50px;
+      text-align: center;
+    }
+    .benefit-text {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      color: #23272f;
+    }
+    
+    /* Jobs Section */
+    .jobs-section {
+      margin-bottom: 4rem;
+    }
+    .jobs-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #23272f;
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    .no-openings {
+      text-align: center;
+      background: #fff;
+      padding: 4rem 2rem;
+      border-radius: 20px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+      animation: fadeInUp 1s both;
+    }
+    .no-openings-icon {
+      font-size: 4rem;
+      color: #007aff;
+      margin-bottom: 2rem;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 0.8; }
+      50% { transform: scale(1.1); opacity: 1; }
+      100% { transform: scale(1); opacity: 0.8; }
+    }
+    .no-openings-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #23272f;
+      margin-bottom: 1rem;
+    }
+    .no-openings-text {
+      font-family: 'Roboto', sans-serif;
+      color: #4a4a4a;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .future-opportunities {
+      background: #f8fbff;
+      padding: 2rem;
+      border-radius: 16px;
+      margin-top: 2rem;
+    }
+    .future-opportunities h4 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #23272f;
+      margin-bottom: 1rem;
+    }
+    .future-opportunities p {
+      font-family: 'Roboto', sans-serif;
+      color: #4a4a4a;
+      margin-bottom: 1.5rem;
+    }
+    .contact-btn {
+      background: #007aff;
+      color: #fff;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      transition: background 0.2s, transform 0.2s;
+      display: inline-block;
+    }
+    .contact-btn:hover {
+      background: #005bb5;
+      transform: translateY(-2px);
+    }
+    
+    /* Footer */
+    footer {
+      width: 100vw;
+      background: #fff;
+      color: #23272f;
+      border-top: 1px solid #ececec;
+      text-align: center;
+      padding: 2.5rem 0 1rem 0;
+      font-family: 'Roboto', Arial, Helvetica, sans-serif;
+      font-size: 1rem;
+      z-index: 2;
+      position: relative;
+      animation: fadeInUp 1.2s 0.5s both;
+    }
+    .footer-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 2rem;
+      padding-bottom: 1.5rem;
+    }
+    .footer-section {
+      flex: 1 1 200px;
+      min-width: 180px;
+    }
+    .footer-logo {
+      font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #23272f;
+      margin-bottom: 0.7rem;
+    }
+    .footer-links, .footer-social {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+    .footer-links a {
+      color: #23272f;
+      text-decoration: none;
+      font-family: 'Poppins', Arial, Helvetica, sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover {
+      color: #007aff;
+    }
+    .footer-social a {
+      color: #23272f;
+      font-size: 1.3rem;
+      margin-right: 1.2rem;
+      transition: color 0.2s, transform 0.2s;
+      display: inline-block;
+    }
+    .footer-social a:hover {
+      color: #007aff;
+      transform: scale(1.15);
+    }
+    .footer-bottom {
+      border-top: 1px solid #ececec;
+      padding-top: 1rem;
+      color: #888;
+      font-size: 0.95rem;
+      margin-top: 1rem;
+    }
+    
+    /* Responsive */
+    @media (max-width: 1200px) {
+      .page-hero, .careers-content { 
+        padding-left: 1.5rem; 
+        padding-right: 1.5rem; 
+      }
+    }
+    @media (max-width: 900px) {
+      .footer-container { flex-direction: column; gap: 1.5rem; text-align: center; }
+      .page-hero-title { font-size: 2.5rem; }
+      .culture-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+      .benefits-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+      .job-header { flex-direction: column; gap: 1rem; }
+      .page-hero { padding: calc(3rem + var(--header-height)) 1rem 2rem 1rem; }
+      .careers-content { padding: 0 1rem; max-width: 1000px; margin: 0 auto; }
+    }
+    @media (max-width: 768px) {
+      .header-container { 
+        flex-direction: column; 
+        gap: 0.5rem; 
+        padding: 0.8rem 1rem; 
+        min-height: auto;
+      }
+      .logo { 
+        margin-bottom: 0.3rem; 
+        font-size: 1.6rem;
+        text-align: center;
+      }
+      nav { width: 100%; }
+      .nav-links { 
+        display: flex; 
+        justify-content: center; 
+        gap: 1rem; 
+        margin-bottom: 0.5rem;
+        flex-wrap: wrap;
+        font-size: 0.9rem;
+      }
+      .social-icons { 
+        display: flex; 
+        justify-content: center; 
+        gap: 0.8rem; 
+        margin-bottom: 0.5rem;
+      }
+      .social-icons a {
+        font-size: 1rem;
+        padding: 0.3rem;
+      }
+      .header-ctas { 
+        display: flex; 
+        justify-content: center; 
+        gap: 0.8rem; 
+        flex-wrap: wrap;
+      }
+      .login-btn, .trial-btn {
+        font-size: 0.85rem;
+        padding: 0.5rem 1rem;
+      }
+      .footer-container {
+        padding: 1.5rem 1rem;
+        text-align: center;
+      }
+      .footer-section {
+        text-align: center;
+        margin-bottom: 1rem;
+      }
+      .footer-links { 
+        display: flex !important;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.8rem; 
+        text-align: center; 
+      }
+      .footer-social { 
+        flex-direction: row; 
+        justify-content: center; 
+        gap: 1.5rem; 
+        text-align: center;
+      }
+      .footer-social a { 
+        margin-right: 0; 
+      }
+      .page-hero-title { font-size: 2.2rem; }
+      .culture-title, .benefits-title, .jobs-title { font-size: 1.8rem; }
+      .culture-card-title { font-size: 1.4rem; }
+      .no-openings-title { font-size: 1.6rem; }
+    }
+    @media (max-width: 600px) {
+      /* Hide desktop nav, show hamburger */
+      .nav-links,
+      .social-icons,
+      .header-ctas {
+        display: none;
+      }
+      .hamburger {
+        display: flex;
+      }
+      
+      /* Improved mobile sizing */
+      .page-hero-title { 
+        font-size: 1.8rem; 
+        line-height: 1.2;
+        margin-bottom: 1rem;
+      }
+      .page-hero-subtitle {
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      .culture-title, .benefits-title, .jobs-title { 
+        font-size: 1.4rem; 
+        margin-bottom: 1.5rem;
+      }
+      .culture-card-title { 
+        font-size: 1.1rem; 
+      }
+      .no-openings-title { 
+        font-size: 1.3rem; 
+      }
+      
+
+      
+      /* Better mobile padding and spacing */
+      .benefits-section { 
+        margin: 0 -1rem 3rem -1rem; 
+        padding: 2rem 1rem; 
+      }
+      .page-hero { 
+        padding: calc(1rem + var(--header-height)) 1rem 1rem 1rem; 
+        min-height: 40vh;
+      }
+      .careers-content { 
+        padding: 0 1rem; 
+      }
+      .culture-card { 
+        padding: 1.2rem; 
+      }
+      .benefits-grid { 
+        grid-template-columns: 1fr; 
+        gap: 1rem; 
+      }
+      
+      /* Mobile header adjustments */
+      .header-container {
+        padding: 0.8rem 1rem;
+        justify-content: space-between;
+      }
+      .logo {
+        font-size: 1.4rem;
+      }
+      
+      /* Ensure no horizontal overflow */
+      body {
+        overflow-x: hidden;
+      }
+      .page-hero-content,
+      .careers-content {
+        max-width: 100%;
+        overflow-x: hidden;
+      }
+
+      /* Mobile footer improvements */
+      footer {
+        border-top: 1px solid #e0e0e0;
+        background: #fff;
+      }
+      .footer-container {
+        padding: 1rem 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      .footer-links {
+        display: flex !important;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      .footer-links a {
+        white-space: nowrap;
+        padding: 0.75rem 1rem;
+      }
+      .footer-social {
+        display: flex !important;
+        justify-content: center;
+        align-items: center;
+        gap: 1.25rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-container">
+      <a href="/" class="logo">Cleanse</a>
+      <nav>
+        <div class="nav-links">
+          <a href="https://cleanse.today/faq">FAQ</a>
+          <a href="https://cleanse.today/contact">Contact</a>
+          <a href="https://cleanse.today/#why-cleanse">Why Cleanse</a>
+        </div>
+        <div class="social-icons">
+          <a href="#" title="Discord" aria-label="Discord"><i class="fab fa-discord"></i></a>
+          <a href="#" title="Twitter" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+          <a href="#" title="LinkedIn" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+          <a href="#" title="X" aria-label="X"><i class="fab fa-x-twitter"></i></a>
+        </div>
+        <div class="header-ctas">
+          <a href="#" class="login-btn">Login</a>
+          <a href="#" class="trial-btn">Start Free Trial</a>
+        </div>
+      </nav>
+      
+      <!-- Hamburger Menu -->
+      <div class="hamburger" onclick="toggleMobileMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer -->
+  <div class="overlay" onclick="closeMobileMenu()"></div>
+  <div class="mobile-drawer">
+    <button class="close-btn" onclick="closeMobileMenu()">✕</button>
+    <div class="nav-links">
+      <a href="https://cleanse.today/faq" onclick="closeMobileMenu()">FAQ</a>
+      <a href="https://cleanse.today/contact" onclick="closeMobileMenu()">Contact</a>
+      <a href="https://cleanse.today/#why-cleanse" onclick="closeMobileMenu()">Why Cleanse</a>
+    </div>
+    <div class="social-icons">
+      <a href="#" title="Discord" aria-label="Discord"><i class="fab fa-discord"></i></a>
+      <a href="#" title="Twitter" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+      <a href="#" title="LinkedIn" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+      <a href="#" title="X" aria-label="X"><i class="fab fa-x-twitter"></i></a>
+    </div>
+    <div class="header-ctas">
+      <a href="#" class="login-btn">Login</a>
+      <a href="#" class="trial-btn">Start Free Trial</a>
+    </div>
+  </div>
+
+  <main>
+    <section class="page-hero">
+      <div class="page-hero-content">
+        <div class="page-hero-icon">
+          <i class="fas fa-users"></i>
+        </div>
+        <h1 class="page-hero-title">Join Our Team</h1>
+        <p class="page-hero-subtitle">Help us build the future of AI-powered data cleaning</p>
+      </div>
+    </section>
+
+    <div class="careers-content">
+      <!-- Culture Section -->
+      <section class="culture-section">
+        <h2 class="culture-title">Our Culture</h2>
+        <div class="culture-grid">
+          <div class="culture-card">
+            <div class="culture-icon">
+              <i class="fas fa-lightbulb"></i>
+            </div>
+            <h3 class="culture-card-title">Innovation First</h3>
+            <p class="culture-card-desc">We push the boundaries of what's possible with AI and data science, always seeking better solutions.</p>
+          </div>
+          <div class="culture-card">
+            <div class="culture-icon">
+              <i class="fas fa-handshake"></i>
+            </div>
+            <h3 class="culture-card-title">Collaboration</h3>
+            <p class="culture-card-desc">We believe the best ideas come from diverse perspectives working together toward common goals.</p>
+          </div>
+          <div class="culture-card">
+            <div class="culture-icon">
+              <i class="fas fa-chart-line"></i>
+            </div>
+            <h3 class="culture-card-title">Growth Mindset</h3>
+            <p class="culture-card-desc">We invest in our people's development and encourage continuous learning and experimentation.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Benefits Section -->
+      <section class="benefits-section">
+        <h2 class="benefits-title">Why Work at Cleanse?</h2>
+        <div class="benefits-grid">
+          <div class="benefit-item">
+            <div class="benefit-icon">
+              <i class="fas fa-heart"></i>
+            </div>
+            <div class="benefit-text">Comprehensive health, dental, and vision coverage</div>
+          </div>
+          <div class="benefit-item">
+            <div class="benefit-icon">
+              <i class="fas fa-home"></i>
+            </div>
+            <div class="benefit-text">Flexible remote work and hybrid options</div>
+          </div>
+          <div class="benefit-item">
+            <div class="benefit-icon">
+              <i class="fas fa-graduation-cap"></i>
+            </div>
+            <div class="benefit-text">$3,000 annual learning and development budget</div>
+          </div>
+          <div class="benefit-item">
+            <div class="benefit-icon">
+              <i class="fas fa-plane"></i>
+            </div>
+            <div class="benefit-text">Unlimited PTO and company-wide mental health days</div>
+          </div>
+          <div class="benefit-item">
+            <div class="benefit-icon">
+              <i class="fas fa-chart-pie"></i>
+            </div>
+            <div class="benefit-text">Equity participation for all employees</div>
+          </div>
+          <div class="benefit-item">
+            <div class="benefit-icon">
+              <i class="fas fa-coffee"></i>
+            </div>
+            <div class="benefit-text">Fully stocked kitchen and catered lunches</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Jobs Section -->
+      <section class="jobs-section">
+        <h2 class="jobs-title">Current Openings</h2>
+        
+        <div class="no-openings">
+          <div class="no-openings-icon">
+            <i class="fas fa-clipboard-check"></i>
+          </div>
+          <h3 class="no-openings-title">No Current Openings</h3>
+          <p class="no-openings-text">We're not actively hiring at the moment, but we're always interested in connecting with talented individuals who are passionate about data quality and AI.</p>
+          <div class="future-opportunities">
+            <h4>Stay Connected</h4>
+            <p>Follow us on social media or send us your resume to be considered for future opportunities.</p>
+                         <a href="https://cleanse.today/contact" class="contact-btn">Get in Touch</a>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-container">
+      <div class="footer-section">
+        <div class="footer-logo">Cleanse</div>
+        <div>AI-powered data cleaning for modern teams.</div>
+      </div>
+      <div class="footer-section footer-links">
+        <a href="https://cleanse.today/">Home</a>
+        <a href="https://cleanse.today/#why-cleanse">Why Cleanse</a>
+        <a href="https://cleanse.today/faq">FAQ</a>
+        <a href="https://cleanse.today/blog">Blog</a>
+        <a href="https://cleanse.today/contact">Contact</a>
+        <a href="https://cleanse.today/careers">Careers</a>
+      </div>
+      <div class="footer-section footer-social">
+        <a href="#" title="Discord" aria-label="Discord"><i class="fab fa-discord"></i></a>
+        <a href="#" title="Twitter" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+        <a href="#" title="LinkedIn" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#" title="X" aria-label="X"><i class="fab fa-x-twitter"></i></a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2024 Cleanse. All rights reserved.
+    </div>
+  </footer>
+
+  <script>
+    // Animate elements on scroll
+    function animateOnScroll(selector) {
+      const elements = document.querySelectorAll(selector);
+      function check() {
+        const trigger = window.innerHeight * 0.92;
+        elements.forEach(el => {
+          const rect = el.getBoundingClientRect();
+          if (rect.top < trigger) {
+            el.classList.add('visible');
+          }
+        });
+      }
+      window.addEventListener('scroll', check);
+      check();
+    }
+    animateOnScroll('.culture-card');
+    animateOnScroll('.benefit-item');
+    animateOnScroll('.no-openings');
+    
+    // Mobile Menu Functions
+    function toggleMobileMenu() {
+      const hamburger = document.querySelector('.hamburger');
+      const drawer = document.querySelector('.mobile-drawer');
+      const overlay = document.querySelector('.overlay');
+      
+      hamburger.classList.toggle('active');
+      drawer.classList.toggle('active');
+      overlay.classList.toggle('active');
+    }
+    
+    function closeMobileMenu() {
+      const hamburger = document.querySelector('.hamburger');
+      const drawer = document.querySelector('.mobile-drawer');
+      const overlay = document.querySelector('.overlay');
+      
+      hamburger.classList.remove('active');
+      drawer.classList.remove('active');
+      overlay.classList.remove('active');
+    }
+  </script>
+</body>
+</html> 

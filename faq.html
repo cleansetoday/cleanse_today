@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cleanse – Professional AI Data Cleaning</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;500;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <style>
+    :root {
+      /* Height of the fixed header so we can offset page content correctly */
+      --header-height: 80px;
+    }
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', Arial, Helvetica, sans-serif;
+      background-color: #fff;
+      color: #23272f;
+      overflow-x: hidden;
+      padding-top: var(--header-height);
+    }
+    body {
+      min-height: 100vh;
+      position: relative;
+      /* Subtle animated grid background */
+      background-image:
+        linear-gradient(to right, #ececec 1px, transparent 1px),
+        linear-gradient(to bottom, #ececec 1px, transparent 1px);
+      background-size: 32px 32px;
+      animation: gridMove 12s linear infinite alternate;
+    }
+    @keyframes gridMove {
+      0% { background-position: 0 0, 0 0; }
+      100% { background-position: 32px 32px, 32px 32px; }
+    }
+    /* Header */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 10;
+      width: 100%;
+      background: #fff;
+      border-bottom: 1px solid #ececec;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      transition: box-shadow 0.3s;
+      animation: fadeInDown 1s;
+    }
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 2rem;
+      background: #fff;
+      z-index: 11;
+    }
+    header { height: var(--header-height); }
+    .logo {
+      font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #23272f;
+      letter-spacing: 1px;
+      transition: color 0.2s;
+      background: #fff;
+      z-index: 12;
+      position: relative;
+      animation: fadeInLeft 1.2s;
+    }
+    @keyframes fadeInLeft {
+      from { opacity: 0; transform: translateX(-40px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 2.5rem;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+    }
+    /* Hamburger Menu */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+      padding: 0.5rem;
+      z-index: 1001;
+    }
+    .hamburger span {
+      width: 25px;
+      height: 3px;
+      background: #23272f;
+      margin: 3px 0;
+      transition: 0.3s;
+    }
+    .hamburger.active span:nth-child(1) {
+      transform: rotate(-45deg) translate(-5px, 6px);
+    }
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+    .hamburger.active span:nth-child(3) {
+      transform: rotate(45deg) translate(-5px, -6px);
+    }
+    /* Mobile Drawer */
+    .mobile-drawer {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 280px;
+      height: 100vh;
+      background: #fff;
+      box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+      transition: right 0.3s ease;
+      z-index: 1000;
+      padding: 2rem 1.5rem;
+    }
+    .mobile-drawer.active {
+      right: 0;
+    }
+    .mobile-drawer .close-btn {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #23272f;
+    }
+    .mobile-drawer .nav-links {
+      display: flex !important;
+      flex-direction: column;
+      gap: 1.5rem;
+      margin-top: 3rem;
+      margin-left: 0;
+    }
+    .mobile-drawer .nav-links a {
+      font-size: 1.1rem;
+      padding: 0.5rem 0;
+      color: #23272f;
+      text-decoration: none;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .mobile-drawer .nav-links a:hover {
+      color: #007aff;
+    }
+    .mobile-drawer .social-icons {
+      display: flex !important;
+      margin-top: 2rem;
+      gap: 1rem;
+      margin-left: 0;
+      justify-content: flex-start;
+    }
+    .mobile-drawer .header-ctas {
+      display: flex !important;
+      margin-top: 2rem;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      z-index: 999;
+    }
+    .overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    .nav-links a {
+      font-family: 'Poppins', Arial, Helvetica, sans-serif;
+      font-weight: 600;
+      color: #23272f;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: color 0.2s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      display: block;
+      width: 0%;
+      height: 2px;
+      background: #007aff;
+      transition: width 0.3s;
+      position: absolute;
+      left: 0; bottom: -3px;
+    }
+    .nav-links a:hover {
+      color: #007aff;
+    }
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+    .social-icons {
+      display: flex;
+      gap: 1.2rem;
+      margin-left: 2rem;
+    }
+    .social-icons a {
+      color: #23272f;
+      font-size: 1.2rem;
+      transition: color 0.2s, transform 0.2s, box-shadow 0.2s;
+      border-radius: 50%;
+      padding: 0.2em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .social-icons a:hover {
+      color: #fff;
+      background: #007aff;
+      transform: scale(1.15);
+      box-shadow: 0 2px 12px #007aff44;
+    }
+    .header-ctas {
+      display: flex;
+      gap: 1rem;
+      margin-left: 1.5rem;
+    }
+    .login-btn {
+      font-family: 'Poppins', Arial, Helvetica, sans-serif;
+      font-weight: 600;
+      color: #23272f;
+      text-decoration: none;
+      font-size: 0.95rem;
+      padding: 0.6rem 1.2rem;
+      border-radius: 6px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .login-btn:hover {
+      background: #f5faff;
+      color: #007aff;
+    }
+    .trial-btn {
+      font-family: 'Poppins', Arial, Helvetica, sans-serif;
+      font-weight: 600;
+      background: #007aff;
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.95rem;
+      padding: 0.6rem 1.2rem;
+      border-radius: 6px;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .trial-btn:hover {
+      background: #005bb5;
+      transform: translateY(-1px);
+    }
+    /* Hero Section */
+    .hero {
+      position: relative;
+      z-index: 2;
+      min-height: 70vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: calc(5rem + var(--header-height)) 1rem 2.5rem 1rem;
+      gap: 2rem;
+      animation: fadeInUp 1.2s;
+      text-align: center;
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .hero-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      max-width: 1000px;
+      width: 90%;
+    }
+    .hero-title {
+      font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+      font-size: 3.5rem;
+      font-weight: 700;
+      color: #23272f;
+      margin-bottom: 1.5rem;
+      line-height: 1.2;
+    }
+    .hero-title span {
+      color: #007aff;
+    }
+    .hero-desc {
+      font-family: 'Roboto', Arial, Helvetica, sans-serif;
+      font-size: 1.3rem;
+      color: #4a4a4a;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+      max-width: 600px;
+    }
+    .hero-cta {
+      font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      background: #007aff;
+      color: #fff;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .hero-cta:hover {
+      background: #005bb5;
+      transform: translateY(-2px);
+    }
+    .hero-robot {
+      animation: tiltLoop 6s ease-in-out infinite;
+    }
+    @keyframes tiltLoop {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-6px) rotate(0.8deg); }
+    }
+    .robot-svg {
+      width: 280px;
+      height: 280px;
+      max-width: 100%;
+      height: auto;
+    }
+    /* Fluid Images and Containers */
+    img, svg, video {
+      max-width: 100%;
+      height: auto;
+    }
+    .header-container,
+    .hero-content,
+    .why-section,
+    .faq-section,
+    .kpi-container,
+    .footer-container {
+      max-width: 100%;
+    }
+    .robot-eye {
+      animation: blink 4s infinite;
+    }
+    @keyframes blink {
+      0%, 90%, 100% { opacity: 1; }
+      95% { opacity: 0.3; }
+    }
+    .robot-mouth {
+      animation: talk 3s ease-in-out infinite;
+    }
+    @keyframes talk {
+      0%, 100% { transform: scaleY(1); }
+      50% { transform: scaleY(0.6); }
+    }
+    /* Why Section */
+    .why-section {
+      padding: 4rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+    .why-title {
+      font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #23272f;
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+    .why-card {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      text-align: center;
+      transition: transform 0.3s, box-shadow 0.3s;
+      animation: tiltLoop 6s ease-in-out infinite;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    .why-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.6s, transform 0.6s;
+    }
+    .why-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+    }
+    .why-icon {
+      font-size: 3rem;
+      color: #007aff;
+      margin-bottom: 1.5rem;
+    }
+    .why-title-text {
+      font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #23272f;
+      margin-bottom: 1rem;
+    }
+    .why-desc {
+      font-family: 'Roboto', Arial, Helvetica, sans-serif;
+      color: #4a4a4a;
+      line-height: 1.6;
+    }
+    /* FAQ Section */
+    .faq-section {
+      padding: 4rem 2rem;
+      max-width: 1000px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+    .faq-title {
+      font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #23272f;
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    .faq-item {
+      background: #fff;
+      border: 1px solid #ececec;
+      border-radius: 14px;
+      margin-bottom: 1.2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      overflow: hidden;
+      transition: box-shadow 0.3s;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    .faq-item.visible {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.5s, transform 0.5s;
+    }
+    .faq-question {
+      font-family: 'Poppins', Arial, Helvetica, sans-serif;
+      font-size: 1.1rem;
+      color: #23272f;
+      padding: 1.2rem 2rem;
+      cursor: pointer;
+      position: relative;
+      font-weight: 600;
+      transition: background 0.2s;
+      user-select: none;
+      display: flex;
+      align-items: center;
+    }
+    .faq-question i {
+      margin-right: 1rem;
+      transition: transform 0.3s;
+    }
+    .faq-question.open i {
+      transform: rotate(90deg) scale(1.2);
+      color: #007aff;
+    }
+    .faq-question:hover {
+      background: #f5faff;
+    }
+    .faq-answer {
+      font-family: 'Roboto', Arial, Helvetica, sans-serif;
+      font-size: 1rem;
+      color: #4a4a4a;
+      padding: 1.2rem 2rem;
+      display: none;
+      border-top: 1px solid #ececec;
+      background: #fafbfc;
+      animation: fadeIn 0.5s;
+    }
+    .faq-answer.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    /* KPI Strip */
+    .kpi-strip {
+      background: linear-gradient(135deg, #007aff 0%, #00c6ff 100%);
+      color: #fff;
+      padding: 3rem 2rem;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+    .kpi-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+    }
+    .kpi-item {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    .kpi-item.visible {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.6s, transform 0.6s;
+    }
+    .kpi-number {
+      font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      animation: numberPulse 2s ease-in-out infinite;
+    }
+    @keyframes numberPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+    .kpi-label {
+      font-family: 'Roboto', Arial, Helvetica, sans-serif;
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+    /* Why More Section */
+    .why-more {
+      padding: 4rem 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+    .why-more-title {
+      font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #23272f;
+      margin-bottom: 1.5rem;
+    }
+    .why-more-copy {
+      font-family: 'Roboto', Arial, Helvetica, sans-serif;
+      font-size: 1.1rem;
+      color: #4a4a4a;
+      line-height: 1.7;
+    }
+    /* Ribbon CTA */
+    .ribbon-cta {
+      background: linear-gradient(135deg, #f5faff 0%, #e9f1fb 100%);
+      padding: 3rem 2rem;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+    .ribbon-cta h3 {
+      font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #23272f;
+      margin-bottom: 1.5rem;
+    }
+    .cta-btn {
+      font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      background: #007aff;
+      color: #fff;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .cta-btn:hover {
+      background: #005bb5;
+      transform: translateY(-2px);
+    }
+    /* Testimonials */
+    .testimonials {
+      padding: 4rem 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+    .testimonial-wrapper {
+      position: relative;
+      height: 120px;
+      overflow: hidden;
+    }
+    .testimonial-slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+    .testimonial-slide.active {
+      opacity: 1;
+    }
+    .testimonial-text {
+      font-family: 'Roboto', Arial, Helvetica, sans-serif;
+      font-size: 1.2rem;
+      color: #4a4a4a;
+      font-style: italic;
+      line-height: 1.6;
+      margin: 0;
+    }
+    .testimonial-author {
+      font-family: 'Poppins', Arial, Helvetica, sans-serif;
+      font-weight: 600;
+      color: #007aff;
+      font-style: normal;
+    }
+    /* Parallax Icons */
+    .parallax-icons {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .parallax-icons i {
+      position: absolute;
+      font-size: 2rem;
+      color: #007aff;
+      opacity: 0.1;
+      animation: float 20s ease-in-out infinite;
+    }
+    /* Footer */
+    footer {
+      width: 100vw;
+      background: #fff;
+      color: #23272f;
+      border-top: 1px solid #ececec;
+      text-align: center;
+      padding: 2.5rem 0 1rem 0;
+      font-family: 'Roboto', Arial, Helvetica, sans-serif;
+      font-size: 1rem;
+      z-index: 2;
+      position: relative;
+      animation: fadeInUp 1.2s 0.5s both;
+    }
+    .footer-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 2rem;
+      padding-bottom: 1.5rem;
+    }
+    .footer-section {
+      flex: 1 1 200px;
+      min-width: 180px;
+    }
+    .footer-logo {
+      font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #23272f;
+      margin-bottom: 0.7rem;
+    }
+    .footer-links, .footer-social {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+    .footer-links a {
+      color: #23272f;
+      text-decoration: none;
+      font-family: 'Poppins', Arial, Helvetica, sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover {
+      color: #007aff;
+    }
+    .footer-social a {
+      color: #23272f;
+      font-size: 1.3rem;
+      margin-right: 1.2rem;
+      transition: color 0.2s, transform 0.2s;
+      display: inline-block;
+    }
+    .footer-social a:hover {
+      color: #007aff;
+      transform: scale(1.15);
+    }
+    .footer-bottom {
+      border-top: 1px solid #ececec;
+      padding-top: 1rem;
+      color: #888;
+      font-size: 0.95rem;
+      margin-top: 1rem;
+    }
+    /* Responsive */
+    @media (max-width: 1200px) {
+      .hero, .why-section, .faq-section, .why-more, .testimonials { 
+        padding-left: 1.5rem; 
+        padding-right: 1.5rem; 
+      }
+    }
+    @media (max-width: 900px) {
+      .footer-container { flex-direction: column; gap: 1.5rem; text-align: center; }
+      .hero-title { font-size: 2.8rem; }
+      .why-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+      .kpi-container { grid-template-columns: repeat(2, 1fr); }
+      .hero { padding: calc(3rem + var(--header-height)) 1rem 2rem 1rem; }
+      .why-section, .faq-section { padding: 3rem 1rem; }
+      .why-more { padding: 3rem 1rem; }
+      .testimonials { padding: 3rem 1rem; }
+    }
+    @media (max-width: 768px) {
+      .header-container { 
+        flex-direction: column; 
+        gap: 0.5rem; 
+        padding: 0.8rem 1rem; 
+        min-height: auto;
+      }
+      .logo { 
+        margin-bottom: 0.3rem; 
+        font-size: 1.6rem;
+        text-align: center;
+      }
+      nav { width: 100%; }
+      .nav-links { 
+        display: flex; 
+        justify-content: center; 
+        gap: 1rem; 
+        margin-bottom: 0.5rem;
+        flex-wrap: wrap;
+        font-size: 0.9rem;
+      }
+      .social-icons { 
+        display: flex; 
+        justify-content: center; 
+        gap: 0.8rem; 
+        margin-bottom: 0.5rem;
+      }
+      .social-icons a {
+        font-size: 1rem;
+        padding: 0.3rem;
+      }
+      .header-ctas { 
+        display: flex; 
+        justify-content: center; 
+        gap: 0.8rem; 
+        flex-wrap: wrap;
+      }
+      .login-btn, .trial-btn {
+        font-size: 0.85rem;
+        padding: 0.5rem 1rem;
+      }
+      .footer-container {
+        padding: 1.5rem 1rem;
+        text-align: center;
+      }
+      .footer-section {
+        text-align: center;
+        margin-bottom: 1rem;
+      }
+      .footer-links { 
+        display: flex !important;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.8rem; 
+        text-align: center; 
+      }
+      .footer-social { 
+        flex-direction: row; 
+        justify-content: center; 
+        gap: 1.5rem; 
+        text-align: center;
+      }
+      .footer-social a { 
+        margin-right: 0; 
+      }
+      .hero-title { font-size: 2.5rem; }
+      .why-title, .faq-title { font-size: 2rem; }
+      .why-more-title { font-size: 1.8rem; }
+    }
+    @media (max-width: 600px) {
+      /* Hide desktop nav, show hamburger */
+      .nav-links,
+      .social-icons,
+      .header-ctas {
+        display: none;
+      }
+      .hamburger {
+        display: flex;
+      }
+
+      /* Improved mobile sizing */
+      .hero-title { 
+        font-size: 1.8rem; 
+        line-height: 1.2;
+        margin-bottom: 1rem;
+      }
+      .hero-desc {
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      .why-title, .faq-title { 
+        font-size: 1.6rem; 
+        margin-bottom: 2rem;
+      }
+      .why-more-title { 
+        font-size: 1.4rem; 
+        margin-bottom: 1rem;
+      }
+      .kpi-container { grid-template-columns: 1fr; }
+      
+
+      
+      /* Better mobile padding and spacing */
+      .hero { 
+        padding: calc(1rem + var(--header-height)) 1rem 1rem 1rem; 
+        min-height: 50vh;
+      }
+      .why-section, .faq-section { 
+        padding: 2rem 1rem; 
+      }
+      .why-more { 
+        padding: 2rem 1rem; 
+      }
+      .testimonials { 
+        padding: 2rem 1rem; 
+      }
+      .why-card { 
+        padding: 1.2rem; 
+        margin-bottom: 1rem;
+      }
+      .faq-question { 
+        padding: 0.8rem 1rem; 
+        font-size: 0.95rem;
+      }
+      .faq-answer { 
+        padding: 0.8rem 1rem; 
+        font-size: 0.9rem;
+      }
+      
+      /* Mobile header adjustments */
+      .header-container {
+        padding: 0.8rem 1rem;
+        justify-content: space-between;
+      }
+      .logo {
+        font-size: 1.4rem;
+      }
+      
+      /* Ensure no horizontal overflow */
+      body {
+        overflow-x: hidden;
+      }
+      .hero-content,
+      .why-section,
+      .faq-section {
+        max-width: 100%;
+        overflow-x: hidden;
+      }
+
+      /* Mobile footer improvements */
+      footer {
+        border-top: 1px solid #e0e0e0;
+        background: #fff;
+      }
+      .footer-container {
+        padding: 1rem 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      .footer-links {
+        display: flex !important;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      .footer-links a {
+        white-space: nowrap;
+        padding: 0.75rem 1rem;
+      }
+      .footer-social {
+        display: flex !important;
+        justify-content: center;
+        align-items: center;
+        gap: 1.25rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-container">
+      <div class="logo">Cleanse</div>
+      <nav>
+        <div class="nav-links">
+          <a href="https://cleanse.today/faq">FAQ</a>
+          <a href="https://cleanse.today/contact">Contact</a>
+          <a href="https://cleanse.today/#why-cleanse">Why Cleanse</a>
+        </div>
+        <div class="social-icons">
+          <a href="#" title="Discord" aria-label="Discord"><i class="fab fa-discord"></i></a>
+          <a href="#" title="Twitter" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+          <a href="#" title="LinkedIn" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+          <a href="#" title="X" aria-label="X"><i class="fab fa-x-twitter"></i></a>
+        </div>
+        <div class="header-ctas">
+          <a href="#" class="login-btn">Login</a>
+          <a href="#" class="trial-btn">Start Free Trial</a>
+        </div>
+      </nav>
+      
+      <!-- Hamburger Menu -->
+      <div class="hamburger" onclick="toggleMobileMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer -->
+  <div class="overlay" onclick="closeMobileMenu()"></div>
+  <div class="mobile-drawer">
+    <button class="close-btn" onclick="closeMobileMenu()">✕</button>
+    <div class="nav-links">
+      <a href="https://cleanse.today/faq" onclick="closeMobileMenu()">FAQ</a>
+      <a href="https://cleanse.today/contact" onclick="closeMobileMenu()">Contact</a>
+      <a href="https://cleanse.today/#why-cleanse" onclick="closeMobileMenu()">Why Cleanse</a>
+    </div>
+    <div class="social-icons">
+      <a href="#" title="Discord" aria-label="Discord"><i class="fab fa-discord"></i></a>
+      <a href="#" title="Twitter" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+      <a href="#" title="LinkedIn" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+      <a href="#" title="X" aria-label="X"><i class="fab fa-x-twitter"></i></a>
+    </div>
+    <div class="header-ctas">
+      <a href="#" class="login-btn">Login</a>
+      <a href="#" class="trial-btn">Start Free Trial</a>
+    </div>
+  </div>
+  <main>
+    <section class="hero">
+      <div class="hero-content">
+        <div class="hero-title">Professional <span>AI Data Cleaning</span> for Modern Teams</div>
+        <div class="hero-desc">Upload, clean, and validate your data with enterprise-grade AI. No setup. No code. Just results.</div>
+        <a href="#" class="hero-cta">Get Started</a>
+      </div>
+      <div class="hero-robot">
+        <!-- Clean, professional robot SVG illustration with animated eyes and mouth -->
+        <svg class="robot-svg" viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="160" cy="160" rx="150" ry="150" fill="#f5faff"/>
+          <rect x="80" y="110" width="160" height="100" rx="40" fill="#e9f1fb" stroke="#007aff" stroke-width="4"/>
+          <rect x="120" y="70" width="80" height="60" rx="30" fill="#e9f1fb" stroke="#007aff" stroke-width="4"/>
+          <circle class="robot-eye" cx="120" cy="160" r="16" fill="#007aff"/>
+          <circle class="robot-eye" cx="200" cy="160" r="16" fill="#007aff"/>
+          <rect class="robot-mouth" x="150" y="190" width="20" height="16" rx="8" fill="#007aff"/>
+          <rect x="70" y="150" width="12" height="40" rx="6" fill="#e9f1fb" stroke="#007aff" stroke-width="3"/>
+          <rect x="238" y="150" width="12" height="40" rx="6" fill="#e9f1fb" stroke="#007aff" stroke-width="3"/>
+          <rect x="140" y="60" width="40" height="12" rx="6" fill="#007aff"/>
+        </svg>
+      </div>
+    </section>
+    <section class="why-section" id="why-cleanse">
+      <div class="why-title">Why Cleanse?</div>
+      <div class="why-grid">
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-bolt"></i></div>
+          <div class="why-title-text">Instant Results</div>
+          <div class="why-desc">Upload and clean data in seconds. No setup, no code, no waiting.</div>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-shield-alt"></i></div>
+          <div class="why-title-text">Enterprise Security</div>
+          <div class="why-desc">TLS, AES-256, GDPR-ready. Data is auto-purged after processing.</div>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-magic"></i></div>
+          <div class="why-title-text">AI-Powered Cleaning</div>
+          <div class="why-desc">AI removes duplicates, fixes typos, and standardizes your data instantly.</div>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-link"></i></div>
+          <div class="why-title-text">Seamless Integration</div>
+          <div class="why-desc">REST API & CLI for CI/CD, notebooks, and ETL workflows.</div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Blog section temporarily removed -->
+    <section id="faq" class="faq-section">
+      <div class="faq-title">Frequently Asked Questions</div>
+      <div class="faq-item">
+        <div class="faq-question"><i class="fas fa-plus"></i> How does Cleanse work?</div>
+        <div class="faq-answer">Upload your file, and our AI engine profiles, cleans, deduplicates, and validates your data in seconds—no setup, no code.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question"><i class="fas fa-plus"></i> What file types are supported?</div>
+        <div class="faq-answer">CSV, Excel, JSON, Parquet, and more. If it's tabular, we handle it.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question"><i class="fas fa-plus"></i> Is my data secure?</div>
+        <div class="faq-answer">Yes. All data is encrypted in transit and at rest. Files auto-delete after processing. GDPR-ready.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question"><i class="fas fa-plus"></i> Can I automate cleaning?</div>
+        <div class="faq-answer">Yes! Use our REST API or CLI to integrate Cleanse into your workflows.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question"><i class="fas fa-plus"></i> Is there a free trial?</div>
+        <div class="faq-answer">Absolutely. Try it instantly—no signup required.</div>
+      </div>
+    </section>
+    <!-- KPI Counter Strip -->
+    <section class="kpi-strip">
+      <div class="kpi-container">
+        <div class="kpi-item"><div class="kpi-number" data-target="80">0</div><div class="kpi-label">% Less Manual Work</div></div>
+        <div class="kpi-item"><div class="kpi-number" data-target="10">0</div><div class="kpi-label">× Faster Processing</div></div>
+        <div class="kpi-item"><div class="kpi-number" data-target="100">0</div><div class="kpi-label">% Secure</div></div>
+        <div class="kpi-item"><div class="kpi-number" data-target="24">0</div><div class="kpi-label">hr Share Links</div></div>
+      </div>
+    </section>
+
+    <!-- Extra Copy Section -->
+    <section class="why-more">
+      <h2 class="why-more-title">Clean Data. Confident Decisions.</h2>
+      <p class="why-more-copy">Dirty spreadsheets cost hours—and bad calls cost millions. <strong>Cleanse</strong> eliminates the grunt work with AI-powered profiling, one-click fixing, and enterprise-grade security. Upload any file, watch the errors melt away, and export trusted data your team can act on immediately. No scripts, no servers—just insight.</p>
+    </section>
+
+    <!-- Ribbon CTA -->
+    <section class="ribbon-cta">
+      <h3>Ready to stop wrestling with dirty data?</h3>
+      <a href="#" class="cta-btn">Start Cleaning&nbsp;Now</a>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+      <div class="testimonial-wrapper" id="testimonialWrapper">
+        <div class="testimonial-slide active"><p class="testimonial-text">"Cleanse cut our data-prep time from hours to minutes. Our analysts can finally focus on insights."<span class="testimonial-author"> — Data Lead, FinTech Co.</span></p></div>
+        <div class="testimonial-slide"><p class="testimonial-text">"The AI deduplication is scary good. It caught inconsistencies we didn't even know we had."<span class="testimonial-author"> — BI Manager, Retail Corp.</span></p></div>
+        <div class="testimonial-slide"><p class="testimonial-text">"Plugged it into our CI pipeline with the CLI. Overnight reports are now 100 % clean."<span class="testimonial-author"> — Head of Engineering, SaaS Startup</span></p></div>
+      </div>
+    </section>
+
+    <!-- Parallax Icons -->
+    <div class="parallax-icons" id="parallaxIcons">
+      <i class="fas fa-file-csv" style="left:10%;animation-duration:18s;"></i>
+      <i class="fas fa-file-excel" style="left:30%;animation-duration:22s;"></i>
+      <i class="fas fa-file-code" style="left:55%;animation-duration:20s;"></i>
+      <i class="fas fa-database" style="left:80%;animation-duration:24s;"></i>
+    </div>
+  </main>
+  <footer id="contact">
+    <div class="footer-container">
+      <div class="footer-section">
+        <div class="footer-logo">Cleanse</div>
+        <div>AI-powered data cleaning for modern teams.</div>
+      </div>
+      <div class="footer-section footer-links">
+        <a href="https://cleanse.today/">Home</a>
+        <a href="https://cleanse.today/#why-cleanse">Why Cleanse</a>
+        <a href="https://cleanse.today/faq">FAQ</a>
+        <a href="https://cleanse.today/blog">Blog</a>
+        <a href="https://cleanse.today/contact">Contact</a>
+        <a href="https://cleanse.today/careers">Careers</a>
+      </div>
+      <div class="footer-section footer-social">
+        <a href="#" title="Discord" aria-label="Discord"><i class="fab fa-discord"></i></a>
+        <a href="#" title="Twitter" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+        <a href="#" title="LinkedIn" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#" title="X" aria-label="X"><i class="fab fa-x-twitter"></i></a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2024 Cleanse. All rights reserved.
+    </div>
+  </footer>
+  <script>
+    // Animate why cards, blog cards, faq on scroll
+    function animateOnScroll(selector) {
+      const elements = document.querySelectorAll(selector);
+      function check() {
+        const trigger = window.innerHeight * 0.92;
+        elements.forEach(el => {
+          const rect = el.getBoundingClientRect();
+          if (rect.top < trigger) {
+            el.classList.add('visible');
+          }
+        });
+      }
+      window.addEventListener('scroll', check);
+      check();
+    }
+    animateOnScroll('.why-card');
+    animateOnScroll('.faq-item');
+    animateOnScroll('.kpi-item');
+
+    // Counter animation
+    function runCounters() {
+      document.querySelectorAll('.kpi-number').forEach(num => {
+        const update=()=>{
+          const target=parseInt(num.getAttribute('data-target'),10);
+          const current=parseInt(num.innerText,10);
+          const inc=Math.ceil(target/80);
+          if(current<target){num.innerText=current+inc;setTimeout(update,30);}else{num.innerText=target+ (num.dataset.suffix||'');}
+        };
+        update();
+      }
+      );
+    }
+    const kpiSection=document.querySelector('.kpi-strip');
+    const kpiObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){runCounters();kpiObs.disconnect();}});},{threshold:0.5});
+    if(kpiSection) kpiObs.observe(kpiSection);
+
+    // Testimonials carousel
+    const slides=document.querySelectorAll('.testimonial-slide');
+    let tsIndex=0;
+    setInterval(()=>{
+      slides[tsIndex].classList.remove('active');
+      tsIndex=(tsIndex+1)%slides.length;
+      slides[tsIndex].classList.add('active');
+    },5000);
+
+    // Parallax icon speed control on scroll
+    window.addEventListener('scroll',()=>{
+      const y=window.scrollY;
+      document.querySelectorAll('#parallaxIcons i').forEach((icon,idx)=>{
+        icon.style.transform=`translateY(${y*0.1*(idx%3+1)}px)`;
+      });
+    });
+    // Ensure FAQ visible
+    document.querySelectorAll('.faq-item').forEach(el=>el.classList.add('visible'));
+
+    // FAQ accordion with icon animation
+    document.querySelectorAll('.faq-item').forEach(item=>{
+      const question=item.querySelector('.faq-question');
+      const answer=item.querySelector('.faq-answer');
+      question.addEventListener('click',()=>{
+        answer.classList.toggle('active');
+        question.classList.toggle('open');
+        const icon=question.querySelector('i');
+        if(icon){icon.classList.toggle('fa-plus');icon.classList.toggle('fa-minus');}
+      });
+    });
+
+    // Blog fetch disabled temporarily
+    
+    // Mobile Menu Functions
+    function toggleMobileMenu() {
+      const hamburger = document.querySelector('.hamburger');
+      const drawer = document.querySelector('.mobile-drawer');
+      const overlay = document.querySelector('.overlay');
+      
+      hamburger.classList.toggle('active');
+      drawer.classList.toggle('active');
+      overlay.classList.toggle('active');
+    }
+    
+    function closeMobileMenu() {
+      const hamburger = document.querySelector('.hamburger');
+      const drawer = document.querySelector('.mobile-drawer');
+      const overlay = document.querySelector('.overlay');
+      
+      hamburger.classList.remove('active');
+      drawer.classList.remove('active');
+      overlay.classList.remove('active');
+    }
+  </script>
+</body>
+</html>
