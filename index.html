@@ -1398,7 +1398,11 @@
       const res = await fetch(`${API_BASE}/clean`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ filename: f.name, content: base64 })
+        body: JSON.stringify({
+  data: { filename: f.name, content: base64 },
+  options: { cutoff: 0.9, fill_missing: false }  // optional tuning
+})
+
       });
 
       if (!res.ok) throw new Error(`Server error ${res.status}`);
