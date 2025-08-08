@@ -1359,5 +1359,73 @@
       overlay.classList.remove('active');
     }
   </script>
+  <!-- Cleanse: hidden file input + status -->
+<input id="cleanse-file" type="file" accept=".csv,.xlsx,.json" style="display:none;">
+<div id="cleanse-status" style="text-align:center;margin:16px 0;color:#007aff;font-weight:600;"></div>
+
+<script>
+  // 👉 set this to your FastAPI base URL
+  const API_BASE = "https://2c2df16f-5851-4cbe-84f3-6f15513d79ed-00-15aayamo8nogw.pike.replit.dev";
+
+  const fileInput = document.getElementById("cleanse-file");
+  const statusEl  = document.getElementById("cleanse-status");
+
+  // Attach to your existing buttons (hero + ribbon)
+  document.querySelectorAll(".hero-cta, .cta-btn").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();                 // keep page where it is
+      statusEl.textContent = "";          // clear old status
+      fileInput.click();                  // open file picker
+    });
+  });
+
+  // When a file is selected, upload → clean → auto-download
+  fileInput.addEventListener("change", async () => {
+    const f = fileInput.files?.[0];
+    if (!f) return;
+
+    statusEl.textContent = "Uploading & cleaning…";
+
+    // read file as base64 (strip data: prefix)
+    const base64 = await new Promise((resolve, reject) => {
+      const r = new FileReader();
+      r.onload = () => resolve(String(r.result).split(",")[1]);
+      r.onerror = reject;
+      r.readAsDataURL(f);
+    });
+
+    try {
+      const res = await fetch(`${API_BASE}/clean`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ filename: f.name, content: base64 })
+      });
+
+      if (!res.ok) throw new Error(`Server error ${res.status}`);
+      const data = await res.json();
+
+      // data.content is base64 CSV -> turn into Blob and download
+      const bytes = Uint8Array.from(atob(data.content), c => c.charCodeAt(0));
+      const blob  = new Blob([bytes], { type: "text/csv" });
+      const url   = URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = data.filename || (f.name.replace(/\.(csv|xlsx|json)$/i,"") + "_cleaned.csv");
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+
+      statusEl.textContent = "Done! Your cleaned CSV has downloaded.";
+    } catch (err) {
+      console.error(err);
+      statusEl.textContent = "Error: " + (err?.message || err);
+    } finally {
+      fileInput.value = ""; // reset for next upload
+    }
+  });
+</script>
+
 </body>
 </html> 
