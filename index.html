@@ -1394,58 +1394,97 @@
 <div id="cleanse-status" style="text-align:center;margin:16px 0;color:#007aff;font-weight:600;"></div>
 
 <script>
-  // 👉 set this to your FastAPI base URL
+  // 👉 Set your FastAPI base URL (Render)
   const API_BASE = "https://cleanse-backend-1.onrender.com";
 
+  // Elements
   const fileInput = document.getElementById("cleanse-file");
   const statusEl  = document.getElementById("cleanse-status");
+  const drop      = document.getElementById("cleanse-drop");        // already in your HTML
+  const browseBtn = document.getElementById("cleanse-browse");      // already in your HTML
+  const prog      = document.getElementById("cleanse-progress");    // already in your HTML
+  const progBar   = prog ? prog.querySelector("div") : null;
 
-  // Attach to your existing buttons (hero + ribbon)
+  // Keep existing hero/ribbon buttons working
   document.querySelectorAll(".hero-cta, .cta-btn").forEach(btn => {
     btn.addEventListener("click", (e) => {
-      e.preventDefault();                 // keep page where it is
-      statusEl.textContent = "";          // clear old status
-      fileInput.click();                  // open file picker
+      if (!fileInput) return;
+      e.preventDefault();
+      if (statusEl) statusEl.textContent = "";
+      fileInput.click();
     });
   });
 
-  // When a file is selected, upload → clean → auto-download
-  fileInput.addEventListener("change", async () => {
-    const f = fileInput.files?.[0];
-    if (!f) return;
+  // Browse button inside the dropzone
+  if (browseBtn && fileInput) browseBtn.addEventListener("click", () => fileInput.click());
 
-    statusEl.textContent = "Uploading & cleaning…";
-
-    // read file as base64 (strip data: prefix)
-    const base64 = await new Promise((resolve, reject) => {
-      const r = new FileReader();
-      r.onload = () => resolve(String(r.result).split(",")[1]);
-      r.onerror = reject;
-      r.readAsDataURL(f);
+  // Drag & drop handlers
+  if (drop) {
+    ["dragenter","dragover"].forEach(evt =>
+      drop.addEventListener(evt, e => { e.preventDefault(); e.stopPropagation(); drop.classList.add("dragover"); })
+    );
+    ["dragleave","drop"].forEach(evt =>
+      drop.addEventListener(evt, e => { e.preventDefault(); e.stopPropagation(); drop.classList.remove("dragover"); })
+    );
+    drop.addEventListener("drop", e => {
+      const f = e.dataTransfer?.files?.[0];
+      if (f) handleFile(f);
     });
+    // click to open picker
+    drop.addEventListener("click", () => { if (fileInput) fileInput.click(); });
+  }
 
+  // File picker
+  if (fileInput) {
+    fileInput.addEventListener("change", () => {
+      const f = fileInput.files?.[0];
+      if (f) handleFile(f);
+    });
+  }
+
+  // Progress helper
+  function stage(text, pct){
+    if (statusEl) statusEl.textContent = text;
+    if (prog && progBar) {
+      prog.style.display = "block";
+      progBar.style.width = (pct || 0) + "%";
+    }
+  }
+
+  async function handleFile(f){
     try {
+      // 1) Read file as base64
+      stage("1/3 Uploading…", 15);
+      const base64 = await new Promise((resolve, reject) => {
+        const r = new FileReader();
+        r.onload = () => resolve(String(r.result).split(",")[1]);
+        r.onerror = reject;
+        r.readAsDataURL(f);
+      });
+
+      // 2) Call the API
+      stage("2/3 Cleaning on server…", 55);
       const res = await fetch(`${API_BASE}/clean`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-  data: { filename: f.name, content: base64 },
-  options: { cutoff: 0.9, fill_missing: false }  // optional tuning
-})
-
+          data: { filename: f.name, content: base64 },
+          options: { cutoff: 0.9, fill_missing: false }
+        })
       });
 
       if (!res.ok) {
-        const errText = await res.text();   // get raw error message
+        const errText = await res.text();
         console.error("API error:", res.status, errText);
-        statusEl.textContent = `Error ${res.status}: ${errText}`;
-        fileInput.value = "";               // reset so user can re-upload
-        return;                             // stop if error
+        if (statusEl) statusEl.textContent = `Error ${res.status}: ${errText}`;
+        if (prog && progBar) { prog.style.display = "none"; progBar.style.width = "0%"; }
+        if (fileInput) fileInput.value = "";
+        return;
       }
-      const data = await res.json();
 
-
-      // data.content is base64 CSV -> turn into Blob and download
+      // 3) Download cleaned CSV
+      stage("3/3 Preparing download…", 90);
+      const data  = await res.json();
       const bytes = Uint8Array.from(atob(data.content), c => c.charCodeAt(0));
       const blob  = new Blob([bytes], { type: "text/csv" });
       const url   = URL.createObjectURL(blob);
@@ -1458,15 +1497,18 @@
       a.remove();
       URL.revokeObjectURL(url);
 
-      statusEl.textContent = "Done! Your cleaned CSV has downloaded.";
+      stage("Done! Your cleaned CSV has downloaded.", 100);
+      setTimeout(() => { if (prog && progBar) { prog.style.display = "none"; progBar.style.width = "0%"; } }, 1500);
     } catch (err) {
       console.error(err);
-      statusEl.textContent = "Error: " + (err?.message || err);
+      if (statusEl) statusEl.textContent = "Error: " + (err?.message || err);
+      if (prog && progBar) { prog.style.display = "none"; progBar.style.width = "0%"; }
     } finally {
-      fileInput.value = ""; // reset for next upload
+      if (fileInput) fileInput.value = "";
     }
-  });
+  }
 </script>
+
 
 </body>
 </html> 
