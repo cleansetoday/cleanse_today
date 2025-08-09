@@ -1065,6 +1065,27 @@
     /* FAQ answer visibility */
     .faq-answer { display: none; }
     .faq-answer.active { display: block; }
+    /* Cleanse dropzone + progress */
+    .dropzone{
+      border:2px dashed #bcd8ff;
+      background:#f5faff;
+      border-radius:14px;
+      padding:22px;
+      text-align:center;
+      color:#2a3b4f;
+      max-width:900px;
+      margin:16px auto;
+      transition:background .15s,border-color .15s,transform .15s;
+    }
+    .dropzone i{ color:#007aff; font-size:1.6rem; margin-right:.5rem; }
+    .dropzone button{
+      background:#007aff;color:#fff;border:0;border-radius:20px;
+      padding:.45rem .9rem;font-weight:700;cursor:pointer
+    }
+    .dropzone.dragover{ background:#eaf3ff; border-color:#007aff; transform:scale(1.01); }
+    
+    #cleanse-progress{max-width:900px;margin:10px auto;display:none;background:#eef3f9;border-radius:9999px;overflow:hidden;height:8px}
+    #cleanse-progress > div{height:100%;width:0;background:#007aff;transition:width .35s ease}
   </style>
 </head>
 <body>
@@ -1219,7 +1240,16 @@
       <h2 class="why-more-title">Clean Data. Confident Decisions.</h2>
       <p class="why-more-copy">Dirty spreadsheets cost hours—and bad calls cost millions. <strong>Cleanse</strong> eliminates the grunt work with AI-powered profiling, one-click fixing, and enterprise-grade security. Upload any file, watch the errors melt away, and export trusted data your team can act on immediately. No scripts, no servers—just insight.</p>
     </section>
-
+    <!-- Cleanse: drag & drop uploader -->
+    <section class="cleanse-uploader">
+      <div id="cleanse-drop" class="dropzone">
+        <p><i class="fas fa-cloud-upload-alt"></i>
+           Drag & drop a CSV/XLSX/JSON here, or
+           <button id="cleanse-browse" type="button">Browse</button>
+        </p>
+      </div>
+      <div id="cleanse-progress"><div></div></div>
+    </section>
     <!-- Ribbon CTA -->
     <section class="ribbon-cta">
       <h3>Ready to stop wrestling with dirty data?</h3>
